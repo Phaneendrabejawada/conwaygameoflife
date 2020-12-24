@@ -7,7 +7,7 @@ import java.util.Scanner;
  *
  */
 public class ConwayGameOfLife {
-	public static void main(String args[])
+	public String sample()
 	{
 	System.out.println("");
 	Board b=new Board();
@@ -28,10 +28,9 @@ public class ConwayGameOfLife {
 	        }
 	     
 	        System.out.println( b.createboard(n, l));
-	   
+	  
 	        sc.close();
-	         
-	       
+     return "Board and next generation is created";  
 
 	}
 

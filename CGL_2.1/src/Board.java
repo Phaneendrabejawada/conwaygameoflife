@@ -7,13 +7,13 @@
  *
  */
 public class Board {
-	NextGeneration c=new NextGeneration();
+	Cell c=new Cell();
 	public String printBoard(boolean[][] board)
 	{
 	if(board==null)
 	return "Board is printed";
 	int n2=board.length;
-	        for(int i=0;i<n2;i++)
+	        for(int i=0;i<n2;i++) 
 	        {
 	            for(int j=0;j<n2;j++)
 	            {
