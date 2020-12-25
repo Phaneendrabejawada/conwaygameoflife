@@ -61,6 +61,12 @@ class TestJunit {
 	    System.out.println("----TEST SEVEN EXECUTED----");
 	    Assertions.assertSame(true,s[2][2]);
 	}
+	@Test
+	 public void testCGLEIGHT() {
+	 System.out.println("----TEST EIGHT EXECUTED----");
+	 ConwayGameOfLife c=new ConwayGameOfLife();
+	 Assertions.assertEquals("Board and next generation is created",c.sample());
+	}
 	
 }
 
