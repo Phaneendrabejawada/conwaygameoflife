@@ -22,7 +22,7 @@ import javafx.scene.shape.Rectangle;
  * interface for the Conway's Game of Life </p>
  * 
  * <p> Copyright: Lynn Robert Carter © 2018-05-06 </p>
- * 
+ *  
  * @author Lynn Robert Carter
  *
  * 
