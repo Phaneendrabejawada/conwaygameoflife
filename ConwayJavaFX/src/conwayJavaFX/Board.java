@@ -1,5 +1,13 @@
 package conwayJavaFX;
 import java.math.*;
+/**
+ * 
+ */
+
+/**
+ * @author Phaneendra
+ *
+ */
 
 public class Board {
 	public int rows;
