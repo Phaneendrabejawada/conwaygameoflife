@@ -20,9 +20,9 @@ import javafx.stage.Stage;
 * @version 2.03	2018-05-07 An implementation baseline for JavaFX graphics
 * 
 */
- 
-public class ConwayMain extends Application { 
-	 
+
+public class ConwayMain extends Application {
+	
 	public UserInterface theGUI;
 	
 	public static double WINDOW_WIDTH;

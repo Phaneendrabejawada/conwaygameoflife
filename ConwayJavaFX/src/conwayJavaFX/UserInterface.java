@@ -1,7 +1,9 @@
-package conwayJavaFX;
 
+package conwayJavaFX;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import javafx.animation.Animation;
@@ -21,10 +23,10 @@ import javafx.scene.shape.Rectangle;
  * <p> Description: A JavaFX demonstration application: This controller class describes the user
  * interface for the Conway's Game of Life </p>
  * 
- * <p> Copyright: Lynn Robert Carter © 2018-05-06 </p>
- *  
+ * <p> Copyright: Lynn Robert Carter Â© 2018-05-06 </p>
+ * 
  * @author Lynn Robert Carter
- *
+ * 
  * 
  * @version 2.03	2018-05-07 An implementation baseline for JavaFX graphics
  * 
@@ -36,6 +38,22 @@ public class UserInterface {
 	Class Attributes
 	
 	**********************************************************************************************/
+	private boolean[][] s;
+	private int[][] l;
+	public void setboard(boolean [][] s)
+	{
+		this.s=s;
+	}
+	public boolean [][] getboard()
+	{
+		return s;
+	}
+	public void setlivecells(int[][] l) {
+		this.l=l;
+	}
+	public int[][] getlivecells(){
+		return l;
+	}
 
 	// Attributes used to establish the board and control panel within the window provided to us
 	private double controlPanelHeight = ConwayMain.WINDOW_HEIGHT - 110;
@@ -78,10 +96,12 @@ public class UserInterface {
 	// These attributes define the Board used by the simulation and the graphical representation
 	// There are two Boards. The previous Board and the new Board.  Once the new Board has been
 	// displayed, it becomes the previous Board for the generation of the next new Board.
-	private Board oddGameBoard = new Board(boardSizeWidth, boardSizeHeight);		// The Board for odd frames of the animation
+	//private Board oddGameBoard = new Board();		// The Board for odd frames of the animation
+	private Board oddGameBoard = new Board();
 	private Pane oddCanvas = new Pane();			// Pane that holds its graphical representation
 	
-	private Board evenGameBoard =  new Board(boardSizeWidth, boardSizeHeight);	// The Board for even frames of the animation
+	//private Board evenGameBoard =  new Board();	// The Board for even frames of the animation
+	private Board evenGameBoard =  new Board();
 	private Pane evenCanvas = new Pane();			// Pane that holds its graphical representation
 
 	private boolean toggle = true;					// A two-state attribute that specifies which
@@ -265,30 +285,29 @@ public class UserInterface {
 	 * This method is called when the Load button is pressed. It tries to load the data onto the
 	 * board for the simulation.
 	 */
+	
 	private void loadImageData() {
+		
 		try {
-			str_FileName = text_FileName.getText();	
-			Scanner sn = new Scanner(new File(str_FileName));
-			int count = 0;
-			while(sn.hasNextLine()) {
-				String[] s = sn.nextLine().split(" ");
-				count++;
-			}
-			int l[][] = new int[count][2];
-				
-			sn = new Scanner(new File(str_FileName));
-			int i = 0;
-			while(sn.hasNextLine()) {
-				String[] s = sn.nextLine().split(" ");
-				l[i][0] = Integer.parseInt(s[0]);
-				l[i][1] = Integer.parseInt(s[1]);
-				i++;
-				
-			}
-			oddGameBoard.createBoard(l);
-			draw();
-			
 			// Your code goes here......
+			Scanner scan= new Scanner(new File(str_FileName));
+			ArrayList<Integer> list1= new ArrayList<Integer>();
+			while(scan.hasNext()) {
+				list1.add(scan.nextInt());
+				
+			}
+			this.l=new int[list1.size()/2][2];
+			int k=0;
+			for(int i=0;i<list1.size()/2;i++)
+			{
+				this.l[i][0]=list1.get(k++);
+				this.l[i][1]=list1.get(k++);
+				
+			}
+			
+			s=oddGameBoard.createboard(100,this.l);
+		
+			populateCanvas(oddCanvas);
 			
 		}
 		catch (Exception e)  {
@@ -298,6 +317,8 @@ public class UserInterface {
 		button_Load.setDisable(true);				// Disable the Load button, since it is done
 		button_Start.setDisable(false);				// Enable the Start button
 	};												// and wait for the User to press it.
+
+	
 
 	/**********
 	 * This method removes the start button, sets up the stop button, and starts the simulation
@@ -318,7 +339,7 @@ public class UserInterface {
 	 */
 	private void stopConway() {
 		// Your code goes here to display the current state of the board.
-		System.out.println("Game is stopping....");  
+		System.out.println("Game is stopping....");
 		System.exit(0);
 	}
 
@@ -327,22 +348,28 @@ public class UserInterface {
 	 */
 	public void runSimulation(){
 		// Use the toggle to flip back and forth between the current generation and next generation boards.
-		
+		window.getChildren().remove(oddCanvas);
+		this.s=oddGameBoard.nextgen(this.s);
+		oddCanvas=new Pane();
+		populateCanvas(oddCanvas);
 		// Your code goes here...
-		if(toggle) {
-			oddGameBoard.nextGeneration(evenGameBoard);
-			toggle = false;
-			//System.out.println(oddGameBoard);
-		}
-		else {
-			evenGameBoard.nextGeneration(oddGameBoard);
-			toggle = true;
-			//System.out.println(evenGameBoard);
-			
-		}
-		draw();
-		
 	}
+	public void populateCanvas(Pane a) {
+		
+		
+		for(int i = 0; i<this.s.length; i++) {
+			for(int j= 0; j<this.s.length; j++) {
+				if(this.s[i][j]) {
+					Rectangle rect = new Rectangle(5,5,Color.BLUE);
+					rect.relocate(4*i, 4*j);
+					a.getChildren().add(rect);
+				}
+			}
+				
+			}
+		window.getChildren().add(a);
+		
+		}
 
 	/**********
 	 * This method reads in the contents of the data file and discards it as quickly as it reads it
@@ -420,30 +447,5 @@ public class UserInterface {
 		errorMessage_FileContents = "";
 		return true;							// End of file found 
 	}
-	/*
-	 * this function adds rectangles to the alive cells(to window)
-	 */
-	public void draw() {
-		Board board;
-		if(toggle) {
-			board = oddGameBoard;
-			
-		}
-		else {
-			board = evenGameBoard;
-		}
-		for(int i = 0; i<board.rows; i++) {
-			for(int j= 0; j<board.columns; j++) {
-				if(board.grid[i][j].isAlive) {
-					Rectangle rect = new Rectangle(5,5,Color.GREEN);
-					rect.relocate(6*i, 6*j);
-					window.getChildren().add(rect);
-				}
-			}
-				
-			}
-		}
-		
-	}
-
-
+	
+}
